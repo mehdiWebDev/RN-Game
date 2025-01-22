@@ -1,4 +1,12 @@
-import { View, TextInput, StyleSheet, Alert, Text } from "react-native";
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Alert,
+  useWindowDimensions,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
 import { useState } from "react";
 import AppButton from "../components/AppButton";
 import Colors from "../contants/colors";
@@ -8,6 +16,7 @@ import InstructionText from "../components/InstructionText";
 
 const StartGameScreen = ({ onStartGame }) => {
   const [enteredValue, setEnteredValue] = useState("");
+  const { height } = useWindowDimensions();
   const numberInputHandler = (inputText) => {
     setEnteredValue(inputText.replace(/[^0-9]/g, ""));
   };
@@ -26,34 +35,39 @@ const StartGameScreen = ({ onStartGame }) => {
     }
     onStartGame(chosenNumber);
   };
+  const marginTop = height < 500 ? 30 : 100;
   return (
-    <View style={styles.container}>
-      <Title>Guess My number</Title>
+    <ScrollView>
+      <KeyboardAvoidingView behavior="position">
+        <View style={[styles.container, { marginTop: marginTop }]}>
+          <Title>Guess My number</Title>
 
-      <Card>
-        <InstructionText> Enter a number </InstructionText>
-        <TextInput
-          maxLength={2}
-          style={styles.numberInput}
-          keyboardType="number-pad"
-          value={enteredValue}
-          onChangeText={numberInputHandler}
-        />
-        <View style={styles.buttonsContainer}>
-          <View style={styles.buttonContainer}>
-            <AppButton onPress={() => setEnteredValue("")}>Reset</AppButton>
-          </View>
-          <View style={styles.buttonContainer}>
-            <AppButton onPress={ConfirmHandler}>Confirm</AppButton>
-          </View>
+          <Card>
+            <InstructionText> Enter a number </InstructionText>
+            <TextInput
+              maxLength={2}
+              style={styles.numberInput}
+              keyboardType="number-pad"
+              value={enteredValue}
+              onChangeText={numberInputHandler}
+            />
+            <View style={styles.buttonsContainer}>
+              <View style={styles.buttonContainer}>
+                <AppButton onPress={() => setEnteredValue("")}>Reset</AppButton>
+              </View>
+              <View style={styles.buttonContainer}>
+                <AppButton onPress={ConfirmHandler}>Confirm</AppButton>
+              </View>
+            </View>
+          </Card>
         </View>
-      </Card>
-    </View>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
-    marginTop: 100,
     alignItems: "center",
   },
 

@@ -1,4 +1,11 @@
-import { View, StyleSheet, Alert, Text, FlatList } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Alert,
+  FlatList,
+  ScrollView,
+  useWindowDimensions,
+} from "react-native";
 import Title from "../components/Title";
 import { useState, useEffect } from "react";
 import NumberContainer from "../components/game/NumberContainer";
@@ -30,6 +37,8 @@ const GameScreen = ({
   const initialGuess = generateRandomBetween(1, 100, userChoice);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
   const [guessRounds, setGuessRounds] = useState([initialGuess]);
+
+  const { height, width } = useWindowDimensions();
 
   useEffect(() => {
     if (currentGuess === userChoice) {
@@ -69,7 +78,8 @@ const GameScreen = ({
 
   const guessRoundsLength = guessRounds.length;
 
-  return (
+  let orientation = width > height ? "landscape" : "portrait";
+  const content = (
     <View style={styles.screen}>
       <Title>Opponent's Guess</Title>
       <NumberContainer>{currentGuess}</NumberContainer>
@@ -92,6 +102,7 @@ const GameScreen = ({
       <View style={styles.listContainer}>
         <FlatList
           data={guessRounds}
+          horizontal={orientation === "landscape"}
           keyExtractor={(item) => item.toString()}
           renderItem={({ item, index }) => (
             <GuessLogItem
@@ -102,6 +113,16 @@ const GameScreen = ({
         />
       </View>
     </View>
+  );
+
+  return (
+    <>
+      {orientation === "portrait" ? (
+        content
+      ) : (
+        <ScrollView>{content}</ScrollView>
+      )}
+    </>
   );
 };
 const styles = StyleSheet.create({
@@ -117,7 +138,6 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     padding: 20,
-    height: "55%",
   },
 });
 

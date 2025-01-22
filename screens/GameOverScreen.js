@@ -1,28 +1,39 @@
-import React from "react";
-import { Text, View, Image, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import Title from "../components/Title";
 import Colors from "../contants/colors";
 import AppButton from "../components/AppButton";
 
 const GameOverScreen = ({ restartGame, roundsNumber, userNumber }) => {
   return (
-    <View style={styles.rootContainer}>
-      <Title>Game Over</Title>
-      <View style={styles.imageContainer}>
-        <Image
-          source={require("../assets/images/success.png")}
-          style={styles.image}
-        />
+    <ScrollView>
+      <View style={styles.rootContainer}>
+        <Title>Game Over</Title>
+        <View style={styles.imageContainer}>
+          <Image
+            source={require("../assets/images/success.png")}
+            style={styles.image}
+          />
+        </View>
+        <Text style={styles.summaryText}>
+          Your phone needed{" "}
+          <Text style={styles.hightlight}>{roundsNumber}</Text> rounds to guess
+          the number
+          <Text style={styles.hightlight}> {userNumber}</Text>
+        </Text>
+        <AppButton onPress={restartGame}>Start New Game</AppButton>
       </View>
-      <Text style={styles.summaryText}>
-        Your phone needed <Text style={styles.hightlight}>{roundsNumber}</Text>{" "}
-        rounds to guess the number
-        <Text style={styles.hightlight}> {userNumber}</Text>
-      </Text>
-      <AppButton onPress={restartGame}>Start New Game</AppButton>
-    </View>
+    </ScrollView>
   );
 };
+
+const deviceWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   rootContainer: {
@@ -32,8 +43,8 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   imageContainer: {
-    width: 300,
-    height: 300,
+    width: deviceWidth < 400 ? 150 : 300,
+    height: deviceWidth < 400 ? 150 : 300,
     borderRadius: "50%",
     borderWidth: 3,
     borderColor: Colors.primary700,
